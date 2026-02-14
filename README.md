@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WorkoutForge
+
+A modern fitness tracking web application built with Next.js, React, and Tailwind CSS. Create custom workout plans, browse an exercise library, and track your fitness journey.
+
+## Features
+
+- **Exercise Library**: Browse 70+ exercises organized by muscle groups (Chest, Back, Legs, Shoulders, Arms, Core)
+- **Advanced Filtering**: Filter exercises by muscle group, equipment type (Barbell, Dumbbell, Machine, Cable, Bodyweight), and difficulty level (Beginner, Intermediate, Advanced)
+- **Sorting**: Sort exercises by name (A-Z, Z-A) or difficulty level
+- **Search**: Search exercises by name or description
+- **Custom Workout Plans**: Create and manage personalized workout plans with specific exercises, sets, reps, and rest times
+- **Pre-made Plans**: Ready-to-use workout plans for quick start
+- **Workout Tracking**: Track your progress in real-time during workouts with set completion and rest timers
+- **Workout History**: View your completed workouts with duration and progress statistics
+- **Multi-language Support**: Available in English and Turkish
+- **Dark/Light Mode**: Automatic system theme detection with manual toggle option
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **UI Library**: React 19
+- **Styling**: Tailwind CSS 4
+- **Icons**: Lucide React
+- **Language**: TypeScript
+- **State Management**: React Hooks + LocalStorage
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone <repository-url>
+cd workout-forge
+
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── library/           # Exercise library page
+│   ├── plans/             # Workout plans (list, create, edit, detail)
+│   ├── workout/[id]/     # Active workout tracking
+│   ├── history/           # Workout history
+│   ├── page.tsx          # Home page
+│   └── layout.tsx         # Root layout
+├── components/            # Reusable UI components
+├── data/                 # Static data (exercises, pre-made plans)
+├── hooks/                # Custom React hooks
+├── lib/                  # Utilities (i18n)
+└── types/                # TypeScript type definitions
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Browse Exercises**: Go to Exercise Library to explore available exercises
+2. **Filter & Search**: Use filters to narrow down exercises by muscle group, equipment type, or difficulty level
+3. **Create a Plan**: Click "Create Plan" to build a custom workout with your chosen exercises
+4. **Start Workout**: Select a plan and click "Start Workout" to begin tracking
+5. **Complete Sets**: Mark each set as complete with built-in rest timers
+6. **View History**: Check your progress in the History section
 
-## Deploy on Vercel
+## Language Support
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Toggle between English and Turkish using the language selector in the navigation. All UI elements, exercise names, and filter labels are translated.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+MIT

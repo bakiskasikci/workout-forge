@@ -1,11 +1,173 @@
 import { Exercise } from '@/types';
 
+const equipmentMap: Record<string, string> = {
+  // Chest - Barbell
+  'bench-press': 'barbell',
+  'incline-bench-press': 'barbell',
+  'decline-bench-press': 'barbell',
+  'close-grip-bench': 'barbell',
+  
+  // Chest - Dumbbell
+  'dumbbell-bench-press': 'dumbbell',
+  'dumbbell-fly': 'dumbbell',
+  
+  // Chest - Cable
+  'cable-crossover': 'cable',
+  'pec-deck': 'machine',
+  'chest-press-machine': 'machine',
+  
+  // Chest - Bodyweight
+  'push-up': 'bodyweight',
+  'chest-dip': 'bodyweight',
+  
+  // Back - Barbell
+  'deadlift': 'barbell',
+  'barbell-row': 'barbell',
+  'rack-pull': 'barbell',
+  'good-morning': 'barbell',
+  'stiff-leg-deadlift': 'barbell',
+  'romanian-deadlift': 'barbell',
+  
+  // Back - Dumbbell
+  'dumbbell-row': 'dumbbell',
+  
+  // Back - Cable
+  'lat-pulldown': 'cable',
+  'seated-cable-row': 'cable',
+  'face-pull': 'cable',
+  
+  // Back - Bodyweight
+  'pull-up': 'bodyweight',
+  'chin-up': 'bodyweight',
+  'inverted-row': 'bodyweight',
+  
+  // Back - Machine
+  't-bar-row': 'machine',
+  'hyperextension': 'machine',
+  
+  // Legs - Barbell
+  'squat': 'barbell',
+  'front-squat': 'barbell',
+  
+  // Legs - Dumbbell
+  'lunges': 'dumbbell',
+  'bulgarian-split-squat': 'dumbbell',
+  'step-up': 'dumbbell',
+  
+  // Legs - Machine
+  'leg-press': 'machine',
+  'hack-squat': 'machine',
+  'leg-extension': 'machine',
+  'leg-curl': 'machine',
+  'seated-leg-curl': 'machine',
+  'calf-raise-standing': 'machine',
+  'calf-raise-seated': 'machine',
+  
+  // Legs - Bodyweight
+  'glute-bridge': 'bodyweight',
+  
+  // Legs - Other
+  'hip-thrust': 'barbell',
+  
+  // Shoulders - Barbell
+  'overhead-press': 'barbell',
+  'upright-row': 'barbell',
+  'shrug': 'barbell',
+  
+  // Shoulders - Dumbbell
+  'dumbbell-shoulder-press': 'dumbbell',
+  'arnold-press': 'dumbbell',
+  'lateral-raise': 'dumbbell',
+  'front-raise': 'dumbbell',
+  'reverse-fly': 'dumbbell',
+  
+  // Shoulders - Cable
+  'cable-lateral-raise': 'cable',
+  
+  // Shoulders - Machine
+  'machine-shoulder-press': 'machine',
+  
+  // Arms - Barbell
+  'bicep-curl': 'barbell',
+  'wrist-curl': 'dumbbell',
+  'reverse-wrist-curl': 'dumbbell',
+  
+  // Arms - Dumbbell
+  'dumbbell-curl': 'dumbbell',
+  'hammer-curl': 'dumbbell',
+  'incline-curl': 'dumbbell',
+  'concentration-curl': 'dumbbell',
+  'tricep-kickback': 'dumbbell',
+  'overhead-tricep-extension': 'dumbbell',
+  
+  // Arms - Cable
+  'cable-curl': 'cable',
+  'tricep-pushdown': 'cable',
+  
+  // Arms - Machine
+  'preacher-curl': 'machine',
+  'skull-crusher': 'barbell',
+  
+  // Arms - Bodyweight
+  'tricep-dip': 'bodyweight',
+  
+  // Core - Bodyweight
+  'plank': 'bodyweight',
+  'crunch': 'bodyweight',
+  'sit-up': 'bodyweight',
+  'bicycle-crunch': 'bodyweight',
+  'leg-raise': 'bodyweight',
+  'hanging-leg-raise': 'bodyweight',
+  'russian-twist': 'bodyweight',
+  'mountain-climber': 'bodyweight',
+  'dead-bug': 'bodyweight',
+  'ab-wheel-rollout': 'other',
+  'side-plank': 'bodyweight',
+  'v-up': 'bodyweight',
+  'flutter-kick': 'bodyweight',
+  'hollow-body': 'bodyweight',
+  'captain-chair-leg-raise': 'machine',
+  'tuck-raise': 'bodyweight',
+  
+  // Core - Cable
+  'cable-woodchop': 'cable',
+};
+
+export const getEquipment = (exerciseId: string): string => {
+  return equipmentMap[exerciseId] || 'other';
+};
+
+export const equipmentTypes = [
+  { value: 'all', label: 'All Equipment' },
+  { value: 'barbell', label: 'Barbell' },
+  { value: 'dumbbell', label: 'Dumbbell' },
+  { value: 'machine', label: 'Machine' },
+  { value: 'cable', label: 'Cable' },
+  { value: 'bodyweight', label: 'Bodyweight' },
+  { value: 'other', label: 'Other' },
+];
+
+export const difficultyLevels = [
+  { value: 'all', label: 'All Levels' },
+  { value: 'beginner', label: 'Beginner' },
+  { value: 'intermediate', label: 'Intermediate' },
+  { value: 'advanced', label: 'Advanced' },
+];
+
+export const sortOptions = [
+  { value: 'name-asc', label: 'Name (A-Z)' },
+  { value: 'name-desc', label: 'Name (Z-A)' },
+  { value: 'difficulty-asc', label: 'Difficulty (Easy to Hard)' },
+  { value: 'difficulty-desc', label: 'Difficulty (Hard to Easy)' },
+];
+
 export const exercises: Exercise[] = [
   // CHEST EXERCISES
   { 
     id: 'bench-press', 
     name: 'Bench Press', 
     muscles: ['chest', 'shoulders', 'arms'], 
+    equipment: 'barbell',
     description: 'The king of chest exercises. A compound movement that builds overall chest mass and strength.',
     instructions: [
       'Lie flat on a bench with your eyes under the barbell',
@@ -20,6 +182,7 @@ export const exercises: Exercise[] = [
     id: 'incline-bench-press', 
     name: 'Incline Bench Press', 
     muscles: ['chest', 'shoulders'], 
+    equipment: 'barbell',
     description: 'Targets the upper portion of the chest muscles for a complete chest development.',
     instructions: [
       'Set the bench to a 30-45 degree angle',
@@ -34,6 +197,7 @@ export const exercises: Exercise[] = [
     id: 'decline-bench-press', 
     name: 'Decline Bench Press', 
     muscles: ['chest'], 
+    equipment: 'barbell',
     description: 'Emphasizes the lower chest muscles while minimizing shoulder involvement.',
     instructions: [
       'Secure your feet under the decline bench pad',
@@ -48,6 +212,7 @@ export const exercises: Exercise[] = [
     id: 'dumbbell-bench-press', 
     name: 'Dumbbell Bench Press', 
     muscles: ['chest', 'shoulders', 'arms'], 
+    equipment: 'dumbbell',
     description: 'Allows for greater range of motion and independent arm movement.',
     instructions: [
       'Lie flat on a bench holding dumbbells at chest level',
@@ -62,6 +227,7 @@ export const exercises: Exercise[] = [
     id: 'dumbbell-fly', 
     name: 'Dumbbell Fly', 
     muscles: ['chest'], 
+    equipment: 'dumbbell',
     description: 'An isolation exercise that stretches and contracts the chest muscles.',
     instructions: [
       'Lie on a flat bench with dumbbells extended above chest',
@@ -76,6 +242,7 @@ export const exercises: Exercise[] = [
     id: 'cable-crossover', 
     name: 'Cable Crossover', 
     muscles: ['chest'], 
+    equipment: 'cable',
     description: 'Provides constant tension throughout the entire movement for chest isolation.',
     instructions: [
       'Stand between cable towers with pulleys at high position',
@@ -90,6 +257,7 @@ export const exercises: Exercise[] = [
     id: 'pec-deck', 
     name: 'Pec Deck Machine', 
     muscles: ['chest'], 
+    equipment: 'machine',
     description: 'A machine exercise that provides consistent chest isolation.',
     instructions: [
       'Sit at the pec deck machine with back against pad',
@@ -104,6 +272,7 @@ export const exercises: Exercise[] = [
     id: 'push-up', 
     name: 'Push-Up', 
     muscles: ['chest', 'shoulders', 'arms'], 
+    equipment: 'bodyweight',
     description: 'The classic bodyweight chest exercise that can be done anywhere.',
     instructions: [
       'Start in plank position with hands slightly wider than shoulders',
@@ -118,6 +287,7 @@ export const exercises: Exercise[] = [
     id: 'chest-dip', 
     name: 'Chest Dip', 
     muscles: ['chest', 'shoulders', 'arms'], 
+    equipment: 'bodyweight',
     description: 'An advanced bodyweight exercise targeting lower chest with forward lean.',
     instructions: [
       'Grip parallel bars and lift your body',
@@ -132,6 +302,7 @@ export const exercises: Exercise[] = [
     id: 'chest-press-machine', 
     name: 'Chest Press Machine', 
     muscles: ['chest', 'shoulders', 'arms'], 
+    equipment: 'machine',
     description: 'A machine exercise great for beginners and isolating chest.',
     instructions: [
       'Sit with back against the pad',
@@ -148,6 +319,7 @@ export const exercises: Exercise[] = [
     id: 'deadlift', 
     name: 'Deadlift', 
     muscles: ['back', 'legs', 'core'], 
+    equipment: 'barbell',
     description: 'The ultimate full-body compound exercise for overall strength.',
     instructions: [
       'Stand with feet hip-width apart, bar over mid-foot',
@@ -162,6 +334,7 @@ export const exercises: Exercise[] = [
     id: 'pull-up', 
     name: 'Pull-Up', 
     muscles: ['back', 'arms'], 
+    equipment: 'bodyweight',
     description: 'The gold standard for building a wide, powerful back.',
     instructions: [
       'Hang from a bar with hands slightly wider than shoulders',
@@ -176,6 +349,7 @@ export const exercises: Exercise[] = [
     id: 'chin-up', 
     name: 'Chin-Up', 
     muscles: ['back', 'arms'], 
+    equipment: 'bodyweight',
     description: 'A pull-up variation with underhand grip that emphasizes biceps.',
     instructions: [
       'Hang from a bar with palms facing you, shoulder-width apart',
@@ -190,6 +364,7 @@ export const exercises: Exercise[] = [
     id: 'lat-pulldown', 
     name: 'Lat Pulldown', 
     muscles: ['back', 'arms'], 
+    equipment: 'cable',
     description: 'A machine exercise that mimics the pull-up motion.',
     instructions: [
       'Sit at lat pulldown machine, secure thighs under pad',
@@ -204,6 +379,7 @@ export const exercises: Exercise[] = [
     id: 'barbell-row', 
     name: 'Barbell Row', 
     muscles: ['back', 'arms'], 
+    equipment: 'barbell',
     description: 'A fundamental back exercise for building thickness.',
     instructions: [
       'Bend at hips with knees slightly bent, back flat',
@@ -218,6 +394,7 @@ export const exercises: Exercise[] = [
     id: 'dumbbell-row', 
     name: 'Dumbbell Row', 
     muscles: ['back', 'arms'], 
+    equipment: 'dumbbell',
     description: 'Single-arm back exercise that allows for full range of motion.',
     instructions: [
       'Place one knee and hand on a bench for support',
@@ -232,6 +409,7 @@ export const exercises: Exercise[] = [
     id: 'seated-cable-row', 
     name: 'Seated Cable Row', 
     muscles: ['back', 'arms'], 
+    equipment: 'cable',
     description: 'Targets the middle back for thickness and detail.',
     instructions: [
       'Sit at cable row station with feet on platform',
@@ -246,6 +424,7 @@ export const exercises: Exercise[] = [
     id: 't-bar-row', 
     name: 'T-Bar Row', 
     muscles: ['back', 'arms'], 
+    equipment: 'machine',
     description: 'An excellent exercise for building a thick, wide back.',
     instructions: [
       'Straddle the T-bar or place feet on platform',
@@ -260,6 +439,7 @@ export const exercises: Exercise[] = [
     id: 'inverted-row', 
     name: 'Inverted Row', 
     muscles: ['back', 'arms'], 
+    equipment: 'bodyweight',
     description: 'A horizontal pulling movement great for back thickness.',
     instructions: [
       'Lie under a bar set at waist height',
@@ -274,6 +454,7 @@ export const exercises: Exercise[] = [
     id: 'face-pull', 
     name: 'Face Pull', 
     muscles: ['back', 'shoulders'], 
+    equipment: 'cable',
     description: 'Targets rear deltoids and upper back for shoulder health.',
     instructions: [
       'Set cable pulley to face height with rope attachment',
@@ -288,6 +469,7 @@ export const exercises: Exercise[] = [
     id: 'rack-pull', 
     name: 'Rack Pull', 
     muscles: ['back'], 
+    equipment: 'barbell',
     description: 'A partial deadlift that emphasizes the upper back and traps.',
     instructions: [
       'Set up barbell in power rack at knee height',
@@ -302,6 +484,7 @@ export const exercises: Exercise[] = [
     id: 'hyperextension', 
     name: 'Hyperextension', 
     muscles: ['back'], 
+    equipment: 'machine',
     description: 'Targets the lower back and glutes for posterior chain.',
     instructions: [
       'Position hips on hyperextension pad, ankles under support',
@@ -318,6 +501,7 @@ export const exercises: Exercise[] = [
     id: 'squat', 
     name: 'Barbell Squat', 
     muscles: ['legs', 'core'], 
+    equipment: 'barbell',
     description: 'The king of leg exercises for overall lower body development.',
     instructions: [
       'Position bar on upper back, feet shoulder-width apart',
@@ -332,6 +516,7 @@ export const exercises: Exercise[] = [
     id: 'front-squat', 
     name: 'Front Squat', 
     muscles: ['legs', 'core'], 
+    equipment: 'barbell',
     description: 'A squat variation that emphasizes quads and requires good mobility.',
     instructions: [
       'Rest bar on front delts, elbows high',
@@ -346,6 +531,7 @@ export const exercises: Exercise[] = [
     id: 'leg-press', 
     name: 'Leg Press', 
     muscles: ['legs'], 
+    equipment: 'machine',
     description: 'A machine exercise for building leg mass with back support.',
     instructions: [
       'Sit in leg press machine, feet shoulder-width on platform',
@@ -360,6 +546,7 @@ export const exercises: Exercise[] = [
     id: 'hack-squat', 
     name: 'Hack Squat', 
     muscles: ['legs'], 
+    equipment: 'machine',
     description: 'A machine squat variation that targets quads and glutes.',
     instructions: [
       'Position shoulders under pads, feet on platform',
@@ -374,6 +561,7 @@ export const exercises: Exercise[] = [
     id: 'lunges', 
     name: 'Walking Lunges', 
     muscles: ['legs'], 
+    equipment: 'dumbbell',
     description: 'A unilateral leg exercise for balance and leg development.',
     instructions: [
       'Stand with feet together',
@@ -388,6 +576,7 @@ export const exercises: Exercise[] = [
     id: 'bulgarian-split-squat', 
     name: 'Bulgarian Split Squat', 
     muscles: ['legs'], 
+    equipment: 'dumbbell',
     description: 'An advanced single-leg exercise for quad and glute development.',
     instructions: [
       'Place rear foot on bench, front foot forward',
@@ -402,6 +591,7 @@ export const exercises: Exercise[] = [
     id: 'leg-extension', 
     name: 'Leg Extension', 
     muscles: ['legs'], 
+    equipment: 'machine',
     description: 'An isolation exercise for the quadriceps.',
     instructions: [
       'Sit in leg extension machine, pad on lower shins',
@@ -416,6 +606,7 @@ export const exercises: Exercise[] = [
     id: 'leg-curl', 
     name: 'Leg Curl', 
     muscles: ['legs'], 
+    equipment: 'machine',
     description: 'An isolation exercise for the hamstrings.',
     instructions: [
       'Lie face down on leg curl machine',
@@ -430,6 +621,7 @@ export const exercises: Exercise[] = [
     id: 'seated-leg-curl', 
     name: 'Seated Leg Curl', 
     muscles: ['legs'], 
+    equipment: 'machine',
     description: 'A seated variation of the leg curl for hamstrings.',
     instructions: [
       'Sit in machine with pad on lower shins',
@@ -444,6 +636,7 @@ export const exercises: Exercise[] = [
     id: 'romanian-deadlift', 
     name: 'Romanian Deadlift', 
     muscles: ['legs', 'back'], 
+    equipment: 'barbell',
     description: 'A hip hinge movement that targets hamstrings and glutes.',
     instructions: [
       'Hold barbell at hip level, slight knee bend',
@@ -458,6 +651,7 @@ export const exercises: Exercise[] = [
     id: 'stiff-leg-deadlift', 
     name: 'Stiff Leg Deadlift', 
     muscles: ['legs', 'back'], 
+    equipment: 'barbell',
     description: 'A deadlift variation with straight legs for hamstring emphasis.',
     instructions: [
       'Stand with feet hip-width, hold barbell',
@@ -472,6 +666,7 @@ export const exercises: Exercise[] = [
     id: 'hip-thrust', 
     name: 'Hip Thrust', 
     muscles: ['legs'], 
+    equipment: 'barbell',
     description: 'The best exercise for building glute strength and size.',
     instructions: [
       'Sit with upper back on bench, barbell over hips',
@@ -486,6 +681,7 @@ export const exercises: Exercise[] = [
     id: 'glute-bridge', 
     name: 'Glute Bridge', 
     muscles: ['legs'], 
+    equipment: 'bodyweight',
     description: 'A bodyweight exercise to activate and build glutes.',
     instructions: [
       'Lie on back, knees bent, feet flat on floor',
@@ -500,6 +696,7 @@ export const exercises: Exercise[] = [
     id: 'calf-raise-standing', 
     name: 'Standing Calf Raise', 
     muscles: ['legs'], 
+    equipment: 'machine',
     description: 'Targets the gastrocnemius (big calf muscle).',
     instructions: [
       'Stand on calf raise machine with balls of feet on platform',
@@ -514,6 +711,7 @@ export const exercises: Exercise[] = [
     id: 'calf-raise-seated', 
     name: 'Seated Calf Raise', 
     muscles: ['legs'], 
+    equipment: 'machine',
     description: 'Targets the soleus (lower calf muscle).',
     instructions: [
       'Sit with knees under pad, feet on platform',
@@ -528,6 +726,7 @@ export const exercises: Exercise[] = [
     id: 'step-up', 
     name: 'Step-Up', 
     muscles: ['legs'], 
+    equipment: 'dumbbell',
     description: 'A functional exercise for leg strength and balance.',
     instructions: [
       'Stand in front of a sturdy box or bench',
@@ -542,6 +741,7 @@ export const exercises: Exercise[] = [
     id: 'good-morning', 
     name: 'Good Morning', 
     muscles: ['back', 'legs'], 
+    equipment: 'barbell',
     description: 'A hip hinge exercise for posterior chain development.',
     instructions: [
       'Position bar on upper back like a squat',
@@ -558,6 +758,7 @@ export const exercises: Exercise[] = [
     id: 'overhead-press', 
     name: 'Overhead Press', 
     muscles: ['shoulders', 'arms'], 
+    equipment: 'barbell',
     description: 'The fundamental pressing movement for shoulder development.',
     instructions: [
       'Stand with barbell at shoulder level',
@@ -572,6 +773,7 @@ export const exercises: Exercise[] = [
     id: 'dumbbell-shoulder-press', 
     name: 'Dumbbell Shoulder Press', 
     muscles: ['shoulders', 'arms'], 
+    equipment: 'dumbbell',
     description: 'A free-weight pressing exercise for shoulders.',
     instructions: [
       'Sit or stand with dumbbells at shoulder height',
@@ -586,6 +788,7 @@ export const exercises: Exercise[] = [
     id: 'arnold-press', 
     name: 'Arnold Press', 
     muscles: ['shoulders'], 
+    equipment: 'dumbbell',
     description: 'Named after Arnold Schwarzenegger, targets all shoulder heads.',
     instructions: [
       'Start with dumbbells at shoulder height, palms facing you',
@@ -600,6 +803,7 @@ export const exercises: Exercise[] = [
     id: 'lateral-raise', 
     name: 'Lateral Raise', 
     muscles: ['shoulders'], 
+    equipment: 'dumbbell',
     description: 'An isolation exercise for the side deltoids.',
     instructions: [
       'Stand with dumbbells at sides',
@@ -614,6 +818,7 @@ export const exercises: Exercise[] = [
     id: 'front-raise', 
     name: 'Front Raise', 
     muscles: ['shoulders'], 
+    equipment: 'dumbbell',
     description: 'An isolation exercise for the front deltoids.',
     instructions: [
       'Stand with dumbbells in front of thighs',
@@ -628,6 +833,7 @@ export const exercises: Exercise[] = [
     id: 'reverse-fly', 
     name: 'Reverse Fly', 
     muscles: ['shoulders', 'back'], 
+    equipment: 'dumbbell',
     description: 'Targets rear deltoids and upper back.',
     instructions: [
       'Bend forward at hips with dumbbells hanging',
@@ -642,6 +848,7 @@ export const exercises: Exercise[] = [
     id: 'upright-row', 
     name: 'Upright Row', 
     muscles: ['shoulders'], 
+    equipment: 'barbell',
     description: 'Targets shoulders and traps with a pulling motion.',
     instructions: [
       'Stand with barbell or dumbbells in front of thighs',
@@ -656,6 +863,7 @@ export const exercises: Exercise[] = [
     id: 'machine-shoulder-press', 
     name: 'Machine Shoulder Press', 
     muscles: ['shoulders', 'arms'], 
+    equipment: 'machine',
     description: 'A machine exercise for shoulder development with stability.',
     instructions: [
       'Sit in machine with back against pad',
@@ -670,6 +878,7 @@ export const exercises: Exercise[] = [
     id: 'cable-lateral-raise', 
     name: 'Cable Lateral Raise', 
     muscles: ['shoulders'], 
+    equipment: 'cable',
     description: 'Provides constant tension on the side deltoids.',
     instructions: [
       'Stand next to low cable pulley',
@@ -684,6 +893,7 @@ export const exercises: Exercise[] = [
     id: 'shrug', 
     name: 'Barbell Shrug', 
     muscles: ['shoulders'], 
+    equipment: 'barbell',
     description: 'Directly targets the trapezius muscles.',
     instructions: [
       'Hold barbell with arms at sides',
@@ -700,6 +910,7 @@ export const exercises: Exercise[] = [
     id: 'bicep-curl', 
     name: 'Barbell Bicep Curl', 
     muscles: ['arms'], 
+    equipment: 'barbell',
     description: 'The classic bicep exercise for arm thickness.',
     instructions: [
       'Stand with barbell, arms extended, palms up',
@@ -714,6 +925,7 @@ export const exercises: Exercise[] = [
     id: 'dumbbell-curl', 
     name: 'Dumbbell Bicep Curl', 
     muscles: ['arms'], 
+    equipment: 'dumbbell',
     description: 'Allows for full range of motion and independent arm work.',
     instructions: [
       'Stand with dumbbells at sides, palms forward',
@@ -728,6 +940,7 @@ export const exercises: Exercise[] = [
     id: 'hammer-curl', 
     name: 'Hammer Curl', 
     muscles: ['arms'], 
+    equipment: 'dumbbell',
     description: 'Targets biceps and brachialis with neutral grip.',
     instructions: [
       'Hold dumbbells at sides with palms facing each other',
@@ -742,6 +955,7 @@ export const exercises: Exercise[] = [
     id: 'preacher-curl', 
     name: 'Preacher Curl', 
     muscles: ['arms'], 
+    equipment: 'machine',
     description: 'Provides strict form for bicep isolation.',
     instructions: [
       'Rest arms on preacher bench pad',
@@ -756,6 +970,7 @@ export const exercises: Exercise[] = [
     id: 'incline-curl', 
     name: 'Incline Dumbbell Curl', 
     muscles: ['arms'], 
+    equipment: 'dumbbell',
     description: 'Stretches biceps under load for greater development.',
     instructions: [
       'Sit on incline bench with dumbbells hanging',
@@ -770,6 +985,7 @@ export const exercises: Exercise[] = [
     id: 'concentration-curl', 
     name: 'Concentration Curl', 
     muscles: ['arms'], 
+    equipment: 'dumbbell',
     description: 'Maximum bicep isolation for peak development.',
     instructions: [
       'Sit with elbow braced against inner thigh',
@@ -784,6 +1000,7 @@ export const exercises: Exercise[] = [
     id: 'cable-curl', 
     name: 'Cable Bicep Curl', 
     muscles: ['arms'], 
+    equipment: 'cable',
     description: 'Provides constant tension throughout the movement.',
     instructions: [
       'Stand at cable machine with straight bar or rope',
@@ -798,6 +1015,7 @@ export const exercises: Exercise[] = [
     id: 'tricep-pushdown', 
     name: 'Tricep Pushdown', 
     muscles: ['arms'], 
+    equipment: 'cable',
     description: 'The primary cable exercise for triceps.',
     instructions: [
       'Stand at cable with bar or rope at chest height',
@@ -812,6 +1030,7 @@ export const exercises: Exercise[] = [
     id: 'tricep-dip', 
     name: 'Tricep Dip', 
     muscles: ['arms', 'chest'], 
+    equipment: 'bodyweight',
     description: 'A bodyweight exercise for tricep development.',
     instructions: [
       'Grip parallel bars and lift body',
@@ -826,6 +1045,7 @@ export const exercises: Exercise[] = [
     id: 'skull-crusher', 
     name: 'Skull Crusher', 
     muscles: ['arms'], 
+    equipment: 'barbell',
     description: 'Lying tricep extension for mass building.',
     instructions: [
       'Lie on bench with barbell extended over chest',
@@ -840,6 +1060,7 @@ export const exercises: Exercise[] = [
     id: 'overhead-tricep-extension', 
     name: 'Overhead Tricep Extension', 
     muscles: ['arms'], 
+    equipment: 'dumbbell',
     description: 'Stretches and works all three heads of triceps.',
     instructions: [
       'Hold dumbbell or barbell overhead with both hands',
@@ -854,6 +1075,7 @@ export const exercises: Exercise[] = [
     id: 'tricep-kickback', 
     name: 'Tricep Kickback', 
     muscles: ['arms'], 
+    equipment: 'dumbbell',
     description: 'An isolation exercise for triceps with dumbbells.',
     instructions: [
       'Bend at hips with dumbbells in hands',
@@ -868,6 +1090,7 @@ export const exercises: Exercise[] = [
     id: 'close-grip-bench', 
     name: 'Close Grip Bench Press', 
     muscles: ['arms', 'chest'], 
+    equipment: 'barbell',
     description: 'A compound tricep exercise with barbell.',
     instructions: [
       'Lie on bench, grip bar with hands shoulder-width or closer',
@@ -882,6 +1105,7 @@ export const exercises: Exercise[] = [
     id: 'wrist-curl', 
     name: 'Wrist Curl', 
     muscles: ['arms'], 
+    equipment: 'dumbbell',
     description: 'Strengthens the forearms and wrist flexors.',
     instructions: [
       'Sit with forearm on thigh, wrist over knee',
@@ -896,6 +1120,7 @@ export const exercises: Exercise[] = [
     id: 'reverse-wrist-curl', 
     name: 'Reverse Wrist Curl', 
     muscles: ['arms'], 
+    equipment: 'dumbbell',
     description: 'Strengthens wrist extensors for balanced forearms.',
     instructions: [
       'Sit with forearm on thigh, wrist over knee',
@@ -912,6 +1137,7 @@ export const exercises: Exercise[] = [
     id: 'plank', 
     name: 'Plank', 
     muscles: ['core'], 
+    equipment: 'bodyweight',
     description: 'The fundamental core stability exercise.',
     instructions: [
       'Start in push-up position on forearms',
@@ -926,6 +1152,7 @@ export const exercises: Exercise[] = [
     id: 'crunch', 
     name: 'Crunch', 
     muscles: ['core'], 
+    equipment: 'bodyweight',
     description: 'A basic abdominal exercise for rectus abdominis.',
     instructions: [
       'Lie on back, knees bent, hands behind head',
@@ -940,6 +1167,7 @@ export const exercises: Exercise[] = [
     id: 'sit-up', 
     name: 'Sit-Up', 
     muscles: ['core'], 
+    equipment: 'bodyweight',
     description: 'A full-range abdominal exercise.',
     instructions: [
       'Lie on back, knees bent',
@@ -954,6 +1182,7 @@ export const exercises: Exercise[] = [
     id: 'bicycle-crunch', 
     name: 'Bicycle Crunch', 
     muscles: ['core'], 
+    equipment: 'bodyweight',
     description: 'Targets obliques and rectus abdominis with rotation.',
     instructions: [
       'Lie on back, hands behind head',
@@ -968,6 +1197,7 @@ export const exercises: Exercise[] = [
     id: 'leg-raise', 
     name: 'Lying Leg Raise', 
     muscles: ['core'], 
+    equipment: 'bodyweight',
     description: 'Targets lower abs with leg movement.',
     instructions: [
       'Lie on back, legs straight',
@@ -982,6 +1212,7 @@ export const exercises: Exercise[] = [
     id: 'hanging-leg-raise', 
     name: 'Hanging Leg Raise', 
     muscles: ['core'], 
+    equipment: 'bodyweight',
     description: 'Advanced core exercise for difficult abs.',
     instructions: [
       'Hang from pull-up bar',
@@ -996,6 +1227,7 @@ export const exercises: Exercise[] = [
     id: 'russian-twist', 
     name: 'Russian Twist', 
     muscles: ['core'], 
+    equipment: 'bodyweight',
     description: 'Targets obliques with rotation.',
     instructions: [
       'Sit with knees bent, lean back slightly',
@@ -1010,6 +1242,7 @@ export const exercises: Exercise[] = [
     id: 'mountain-climber', 
     name: 'Mountain Climber', 
     muscles: ['core'], 
+    equipment: 'bodyweight',
     description: 'A dynamic core exercise with cardio benefits.',
     instructions: [
       'Start in push-up position',
@@ -1024,6 +1257,7 @@ export const exercises: Exercise[] = [
     id: 'dead-bug', 
     name: 'Dead Bug', 
     muscles: ['core'], 
+    equipment: 'bodyweight',
     description: 'A safe core exercise that trains anti-extension.',
     instructions: [
       'Lie on back with arms extended to ceiling',
@@ -1038,6 +1272,7 @@ export const exercises: Exercise[] = [
     id: 'ab-wheel-rollout', 
     name: 'Ab Wheel Rollout', 
     muscles: ['core'], 
+    equipment: 'other',
     description: 'An advanced core exercise for deep ab engagement.',
     instructions: [
       'Kneel with ab wheel in front',
@@ -1052,6 +1287,7 @@ export const exercises: Exercise[] = [
     id: 'cable-woodchop', 
     name: 'Cable Woodchop', 
     muscles: ['core'], 
+    equipment: 'cable',
     description: 'Rotational core exercise using cable machine.',
     instructions: [
       'Set cable to low position',
@@ -1066,6 +1302,7 @@ export const exercises: Exercise[] = [
     id: 'side-plank', 
     name: 'Side Plank', 
     muscles: ['core'], 
+    equipment: 'bodyweight',
     description: 'Targets the obliques and lateral core.',
     instructions: [
       'Lie on side with forearm on floor',
@@ -1080,6 +1317,7 @@ export const exercises: Exercise[] = [
     id: 'v-up', 
     name: 'V-Up', 
     muscles: ['core'], 
+    equipment: 'bodyweight',
     description: 'An advanced crunch with leg extension.',
     instructions: [
       'Lie flat on back, arms extended overhead',
@@ -1094,6 +1332,7 @@ export const exercises: Exercise[] = [
     id: 'flutter-kick', 
     name: 'Flutter Kick', 
     muscles: ['core'], 
+    equipment: 'bodyweight',
     description: 'A dynamic core exercise for lower abs.',
     instructions: [
       'Lie on back, legs straight',
@@ -1108,6 +1347,7 @@ export const exercises: Exercise[] = [
     id: 'hollow-body', 
     name: 'Hollow Body Hold', 
     muscles: ['core'], 
+    equipment: 'bodyweight',
     description: 'A gymnastics core exercise for total core engagement.',
     instructions: [
       'Lie on back, arms overhead',
@@ -1122,6 +1362,7 @@ export const exercises: Exercise[] = [
     id: 'captain-chair-leg-raise', 
     name: 'Captain\'s Chair Leg Raise', 
     muscles: ['core'], 
+    equipment: 'machine',
     description: 'An assisted hanging leg raise using machine.',
     instructions: [
       'Sit in captain\'s chair with forearms on pads',
@@ -1136,6 +1377,7 @@ export const exercises: Exercise[] = [
     id: 'tuck-raise', 
     name: 'Tuck Raise', 
     muscles: ['core'], 
+    equipment: 'bodyweight',
     description: 'A hanging exercise with knee tuck.',
     instructions: [
       'Hang from pull-up bar',

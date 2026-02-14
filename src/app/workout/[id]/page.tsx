@@ -110,7 +110,9 @@ export default function WorkoutPage() {
     );
   }
 
-  const progress = ((currentExerciseIndex * (currentExercise?.sets || 0) + currentSetIndex + 1) / totalSets) * 100;
+  const progress = totalSets > 0 
+    ? Math.min(((completedSets.length) / totalSets) * 100, 100)
+    : 0;
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
@@ -156,11 +158,11 @@ export default function WorkoutPage() {
             <p className="text-sm text-muted-foreground mb-2">
               {t('workout.exercise')} {currentExerciseIndex + 1} {t('workout.of')} {plan.exercises.length}
             </p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">{exerciseData?.name}</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">{t(`exercise.${exerciseData?.id}`) || exerciseData?.name}</h2>
             <div className="flex flex-wrap justify-center gap-1.5">
               {exerciseData?.muscles.map(muscle => (
                 <span key={muscle} className="text-xs px-2 py-1 bg-secondary rounded-full text-muted-foreground">
-                  {muscle}
+                  {t(`muscle.${muscle}`)}
                 </span>
               ))}
             </div>
@@ -197,7 +199,7 @@ export default function WorkoutPage() {
                   {exIdx < currentExerciseIndex ? <Check className="w-4 h-4" /> : exIdx + 1}
                 </span>
                 <span className={`flex-1 text-sm ${exIdx === currentExerciseIndex ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
-                  {exData?.name}
+                  {t(`exercise.${exData?.id}`) || exData?.name}
                 </span>
                 <div className="flex gap-1">
                   {Array.from({ length: exercise.sets }).map((_, setIdx) => (

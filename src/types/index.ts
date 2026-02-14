@@ -1,9 +1,11 @@
 export type MuscleGroup = 'chest' | 'back' | 'legs' | 'shoulders' | 'arms' | 'core';
+export type Equipment = 'barbell' | 'dumbbell' | 'machine' | 'bodyweight' | 'cable' | 'other';
 
 export interface Exercise {
   id: string;
   name: string;
   muscles: MuscleGroup[];
+  equipment: Equipment;
   description: string;
   instructions: string[];
   tips?: string[];
