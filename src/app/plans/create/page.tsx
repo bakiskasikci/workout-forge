@@ -10,7 +10,7 @@ import { Button } from '@/components/Button';
 import { MuscleBadge } from '@/components/MuscleBadge';
 import { useLanguage } from '@/lib/i18n';
 import { PlanExercise, MuscleGroup as MuscleGroupType } from '@/types';
-import { ArrowLeft, Plus, X, Save, Trash2, GripVertical } from 'lucide-react';
+import { ArrowLeft, Plus, X, Save, Trash2, GripVertical, Search } from 'lucide-react';
 import Link from 'next/link';
 
 interface SelectedExercise {
@@ -63,6 +63,7 @@ export default function CreatePlanPage() {
   const [selectedExercises, setSelectedExercises] = useState<SelectedExercise[]>(initialData.exercises);
   const [showExercisePicker, setShowExercisePicker] = useState(false);
   const [muscleFilter, setMuscleFilter] = useState<string>('all');
+  const [exerciseSearch, setExerciseSearch] = useState('');
 
   const getMuscleLabel = (value: string): string => {
     const labels: Record<string, Record<string, string>> = {
@@ -76,9 +77,21 @@ export default function CreatePlanPage() {
     return labels[language][value] || value;
   };
 
-  const filteredExercises = muscleFilter === 'all'
-    ? exercises
-    : exercises.filter(e => e.muscles.includes(muscleFilter as MuscleGroupType));
+  const filteredExercises = useMemo(() => {
+    let result = muscleFilter === 'all'
+      ? exercises
+      : exercises.filter(e => e.muscles.includes(muscleFilter as MuscleGroupType));
+    
+    if (exerciseSearch.trim()) {
+      const search = exerciseSearch.toLowerCase();
+      result = result.filter(e => 
+        e.name.toLowerCase().includes(search) ||
+        e.description.toLowerCase().includes(search)
+      );
+    }
+    
+    return result;
+  }, [muscleFilter, exerciseSearch]);
 
   const addExercise = (exerciseId: string) => {
     const newExercise: SelectedExercise = {
@@ -238,7 +251,7 @@ export default function CreatePlanPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-muted-foreground mb-1">Weight (kg)</label>
+                      <label className="block text-xs text-muted-foreground mb-1">{t('plan.weight')}</label>
                       <input
                         type="number"
                         min={0}
@@ -282,11 +295,26 @@ export default function CreatePlanPage() {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-semibold text-foreground">{t('picker.title')}</h2>
                 <button
-                  onClick={() => setShowExercisePicker(false)}
+                  onClick={() => {
+                    setShowExercisePicker(false);
+                    setExerciseSearch('');
+                    setMuscleFilter('all');
+                  }}
                   className="p-1.5 hover:bg-secondary rounded-lg transition-colors"
                 >
                   <X className="w-5 h-5 text-muted-foreground" />
                 </button>
+              </div>
+              <div className="relative mb-4">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  placeholder={t('library.search')}
+                  value={exerciseSearch}
+                  onChange={(e) => setExerciseSearch(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 bg-secondary border-0 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                  autoFocus
+                />
               </div>
               <div className="flex flex-wrap gap-2">
                 <button

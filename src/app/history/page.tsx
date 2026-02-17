@@ -72,12 +72,12 @@ export default function HistoryPage() {
 
           {/* History List */}
           <div className="space-y-3">
-            {history.map(session => {
+            {history.map((session, index) => {
               const completedCount = session.completedSets.filter(s => s.completed).length;
               const progress = Math.round((completedCount / session.totalSets) * 100);
-              
+
               return (
-                <Card key={session.id} className="p-4">
+                <Card key={session.id} className="p-4 animate-slide-up" style={{ animationDelay: `${index * 0.05}s`, animationFillMode: 'both' }}>
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <h3 className="font-semibold text-foreground">{session.planName}</h3>

@@ -26,10 +26,35 @@ export default function WorkoutPage() {
   const [isResting, setIsResting] = useState(false);
   const [restTime, setRestTime] = useState(0);
   const startTimeRef = useRef<number>(0);
+  const [elapsedTime, setElapsedTime] = useState(0);
 
   useEffect(() => {
     startTimeRef.current = Date.now();
   }, []);
+
+  // Track elapsed workout time
+  useEffect(() => {
+    if (!plan) return;
+    
+    const interval = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - startTimeRef.current) / 1000);
+      setElapsedTime(elapsed);
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [plan]);
+
+  const formatElapsedTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const getExerciseName = (exerciseId: string | undefined, fallbackName?: string): string => {
+    if (!exerciseId) return fallbackName || '';
+    const translated = t(`exercise.${exerciseId}`);
+    return translated !== `exercise.${exerciseId}` ? translated : (fallbackName || exerciseId);
+  };
 
   const currentExercise = plan?.exercises[currentExerciseIndex];
   const exerciseData = currentExercise ? exercises.find(e => e.id === currentExercise.exerciseId) : null;
@@ -42,13 +67,21 @@ export default function WorkoutPage() {
   const finishWorkout = () => {
     if (!plan) return;
     const duration = Math.floor((Date.now() - startTimeRef.current) / 1000);
+    
+    // Filter out any duplicate completed sets when saving
+    const uniqueCompletedSets = completedSets.filter((set, index, self) =>
+      index === self.findIndex((s) => (
+        s.exerciseId === set.exerciseId && s.setIndex === set.setIndex
+      ))
+    );
+    
     const session: WorkoutSession = {
       id: `session-${Date.now()}`,
       planId: plan.id,
       planName: plan.name,
       date: new Date().toISOString(),
       duration,
-      completedSets,
+      completedSets: uniqueCompletedSets,
       totalSets,
       completedAt: new Date().toISOString(),
     };
@@ -57,9 +90,11 @@ export default function WorkoutPage() {
   };
 
   const advanceToNextSet = () => {
+    if (!plan) return;
+    
     if (currentSetIndex < (currentExercise?.sets || 0) - 1) {
       setCurrentSetIndex(prev => prev + 1);
-    } else if (currentExerciseIndex < (plan?.exercises.length || 0) - 1) {
+    } else if (currentExerciseIndex < plan.exercises.length - 1) {
       setCurrentExerciseIndex(prev => prev + 1);
       setCurrentSetIndex(0);
     } else {
@@ -68,36 +103,64 @@ export default function WorkoutPage() {
   };
 
   const handleCompleteSet = () => {
-    if (!currentExercise) return;
+    if (!currentExercise || !plan) return;
+    
+    // Check if this set is already completed (prevent duplicates)
+    const isAlreadyCompleted = completedSets.some(
+      s => s.exerciseId === currentExercise.exerciseId && s.setIndex === currentSetIndex && s.completed
+    );
+    if (isAlreadyCompleted) return;
+    
     const newCompletedSet: CompletedSet = {
       exerciseId: currentExercise.exerciseId,
       setIndex: currentSetIndex,
       completed: true,
     };
-    setCompletedSets([...completedSets, newCompletedSet]);
+    setCompletedSets(prev => [...prev, newCompletedSet]);
 
     if (currentSetIndex < currentExercise.sets - 1) {
       setIsResting(true);
       setRestTime(currentExercise.restSeconds);
-    } else if (currentExerciseIndex < (plan?.exercises.length || 0) - 1) {
+    } else if (currentExerciseIndex < plan.exercises.length - 1) {
       setCurrentExerciseIndex(prev => prev + 1);
       setCurrentSetIndex(0);
       setIsResting(true);
-      setRestTime(plan?.exercises[currentExerciseIndex + 1].restSeconds || 60);
+      setRestTime(plan.exercises[currentExerciseIndex + 1].restSeconds || 60);
     } else {
       finishWorkout();
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _skipRest = () => {
+    setIsResting(false);
+    advanceToNextSet();
+  };
+
+  // Handle rest timer - use a ref to track if we're transitioning
+  const isTransitioningRef = useRef(false);
+
   useEffect(() => {
-    if (isResting && restTime > 0) {
+    if (!isResting) {
+      isTransitioningRef.current = false;
+      return;
+    }
+
+    if (restTime > 0) {
       const timer = setTimeout(() => setRestTime(prev => prev - 1), 1000);
       return () => clearTimeout(timer);
-    } else if (isResting && restTime === 0) {
-      setIsResting(false);
-      advanceToNextSet();
     }
-  }, [isResting, restTime]);
+
+    // Rest is complete, transition to next
+    if (!isTransitioningRef.current) {
+      isTransitioningRef.current = true;
+      // Use timeout to defer the state update
+      setTimeout(() => {
+        setIsResting(false);
+        advanceToNextSet();
+      }, 0);
+    }
+  }, [isResting, restTime]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!plan) {
     return (
@@ -130,6 +193,10 @@ export default function WorkoutPage() {
           <Zap className="w-4 h-4 text-primary" />
           <span className="text-sm font-medium text-foreground">{Math.round(progress)}%</span>
         </div>
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-full">
+          <Clock className="w-4 h-4 text-muted-foreground" />
+          <span className="text-sm font-medium text-foreground font-mono">{formatElapsedTime(elapsedTime)}</span>
+        </div>
       </div>
 
       <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
@@ -147,7 +214,7 @@ export default function WorkoutPage() {
             </div>
           </div>
           <h2 className="text-xl font-semibold text-foreground mb-2">{t('workout.restTime')}</h2>
-          <p className="text-5xl font-bold text-primary mb-6">{restTime}s</p>
+          <p className="text-5xl font-bold text-primary mb-6">{restTime}{t('common.seconds')}</p>
           <Button onClick={() => { setIsResting(false); advanceToNextSet(); }} size="lg">
             {t('workout.skipRest')}
           </Button>
@@ -158,7 +225,7 @@ export default function WorkoutPage() {
             <p className="text-sm text-muted-foreground mb-2">
               {t('workout.exercise')} {currentExerciseIndex + 1} {t('workout.of')} {plan.exercises.length}
             </p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">{t(`exercise.${exerciseData?.id}`) || exerciseData?.name}</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">{getExerciseName(exerciseData?.id, exerciseData?.name)}</h2>
             <div className="flex flex-wrap justify-center gap-1.5">
               {exerciseData?.muscles.map(muscle => (
                 <span key={muscle} className="text-xs px-2 py-1 bg-secondary rounded-full text-muted-foreground">
@@ -174,7 +241,7 @@ export default function WorkoutPage() {
             </p>
             <p className="text-xl text-muted-foreground">
               {currentExercise?.reps} {t('plan.reps')}
-              {currentExercise && currentExercise.weight > 0 && ` @ ${currentExercise.weight}kg`}
+              {currentExercise && currentExercise.weight > 0 && ` @ ${currentExercise.weight}${t('common.kg')}`}
             </p>
           </div>
 
@@ -199,7 +266,7 @@ export default function WorkoutPage() {
                   {exIdx < currentExerciseIndex ? <Check className="w-4 h-4" /> : exIdx + 1}
                 </span>
                 <span className={`flex-1 text-sm ${exIdx === currentExerciseIndex ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
-                  {t(`exercise.${exData?.id}`) || exData?.name}
+                  {getExerciseName(exData?.id, exData?.name)}
                 </span>
                 <div className="flex gap-1">
                   {Array.from({ length: exercise.sets }).map((_, setIdx) => (

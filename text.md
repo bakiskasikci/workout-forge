@@ -1,0 +1,1 @@
+The ~/.idearalph/ folder is here. Check it out.

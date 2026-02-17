@@ -31,7 +31,11 @@ export default function PlanDetailPage() {
   }
 
   const getExerciseName = (exerciseId: string) => {
-    return exercises.find(e => e.id === exerciseId)?.name || 'Unknown';
+    const exercise = exercises.find(e => e.id === exerciseId);
+    if (!exercise) return t('plan.unknownExercise');
+    return t(`exercise.${exercise.id}`) !== `exercise.${exercise.id}` 
+      ? t(`exercise.${exercise.id}`) 
+      : exercise.name;
   };
 
   const handleDelete = () => {
@@ -93,13 +97,13 @@ export default function PlanDetailPage() {
                   <p className="font-medium text-foreground">{getExerciseName(exercise.exerciseId)}</p>
                   <p className="text-sm text-muted-foreground">
                     {exercise.sets} {t('plan.sets')} × {exercise.reps} {t('plan.reps')}
-                    {exercise.weight > 0 && ` @ ${exercise.weight}kg`}
+                    {exercise.weight > 0 && ` @ ${exercise.weight}${t('common.kg')}`}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-1 text-sm text-muted-foreground">
                 <Clock className="w-4 h-4" />
-                {exercise.restSeconds}s {t('plan.rest')}
+                {exercise.restSeconds}{t('common.seconds')} {t('plan.rest')}
               </div>
             </div>
           ))}

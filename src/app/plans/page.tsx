@@ -25,10 +25,10 @@ export default function PlansPage() {
     savePlan(cloned);
   };
 
-  const PlanCard = ({ plan, showActions = true }: { plan: typeof plans[0]; showActions?: boolean }) => (
-    <div className="h-full">
+  const PlanCard = ({ plan, showActions = true, index = 0 }: { plan: typeof plans[0]; showActions?: boolean; index?: number }) => (
+    <div className="h-full animate-slide-up" style={{ animationDelay: `${index * 0.05}s`, animationFillMode: 'both' }}>
       <Link href={`/plans/${plan.id}`} className="block h-full">
-        <Card className="p-4 card-hover h-full flex flex-col group">
+        <Card hover className="p-4 h-full flex flex-col group">
           <div className="flex items-start justify-between mb-3">
             <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors flex-1">
               {plan.name}
@@ -92,8 +92,8 @@ export default function PlansPage() {
             {t('plans.yourPlans')}
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {userPlans.map(plan => (
-              <PlanCard key={plan.id} plan={plan} />
+            {userPlans.map((plan, idx) => (
+              <PlanCard key={plan.id} plan={plan} index={idx} />
             ))}
           </div>
         </div>
@@ -105,8 +105,8 @@ export default function PlansPage() {
           {t('plans.premadePlans')}
         </h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {preMade.map(plan => (
-            <PlanCard key={plan.id} plan={plan} showActions={false} />
+          {preMade.map((plan, idx) => (
+            <PlanCard key={plan.id} plan={plan} showActions={false} index={idx + userPlans.length} />
           ))}
         </div>
       </div>

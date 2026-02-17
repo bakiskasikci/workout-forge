@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { exercises, muscleGroups, equipmentTypes, difficultyLevels, sortOptions } from '@/data/exercises';
 import { ExerciseCard, MuscleBadge } from '@/components/MuscleBadge';
 import { Card } from '@/components/Card';
@@ -59,25 +59,25 @@ export default function LibraryPage() {
     return labels[language][value] || value;
   };
 
-  const getExerciseName = (exercise: Exercise): string => {
+  const getExerciseName = useCallback((exercise: Exercise): string => {
     const translated = t(`exercise.${exercise.id}`);
     return translated !== `exercise.${exercise.id}` ? translated : exercise.name;
-  };
+  }, [t]);
 
-  const getExerciseDescription = (exercise: Exercise): string => {
+  const getExerciseDescription = useCallback((exercise: Exercise): string => {
     const translated = t(`desc.${exercise.id}`);
     return translated !== `desc.${exercise.id}` ? translated : exercise.description;
-  };
+  }, [t]);
 
-  const getDifficulty = (muscles: MuscleGroup[]): { level: string; value: string; color: string } => {
+  const getDifficulty = useCallback((muscles: MuscleGroup[]): { level: string; value: string; color: string } => {
     const count = muscles.length;
     if (count >= 3) return { level: t('common.advanced') || 'Advanced', value: 'advanced', color: 'text-red-600 dark:text-red-400' };
     if (count >= 2) return { level: t('common.intermediate') || 'Intermediate', value: 'intermediate', color: 'text-yellow-600 dark:text-yellow-400' };
     return { level: t('common.beginner') || 'Beginner', value: 'beginner', color: 'text-green-600 dark:text-green-400' };
-  };
+  }, [t]);
 
   const filteredExercises = useMemo(() => {
-    let result = exercises.filter(exercise => {
+    const result = exercises.filter(exercise => {
       const matchesMuscle = selectedMuscle === 'all' || exercise.muscles.includes(selectedMuscle as MuscleGroup);
       const matchesEquipment = selectedEquipment === 'all' || exercise.equipment === selectedEquipment;
       const matchesDifficulty = selectedDifficulty === 'all' || getDifficulty(exercise.muscles).value === selectedDifficulty;
@@ -105,7 +105,7 @@ export default function LibraryPage() {
     });
 
     return result;
-  }, [selectedMuscle, selectedEquipment, selectedDifficulty, sortBy, searchQuery, language]);
+  }, [selectedMuscle, selectedEquipment, selectedDifficulty, sortBy, searchQuery, getDifficulty, getExerciseName, getExerciseDescription]);
 
   const activeFiltersCount = [selectedMuscle !== 'all', selectedEquipment !== 'all', selectedDifficulty !== 'all'].filter(Boolean).length;
 
@@ -254,16 +254,18 @@ export default function LibraryPage() {
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredExercises.map(exercise => (
-          <div 
-            key={exercise.id} 
+        {filteredExercises.map((exercise, index) => (
+          <div
+            key={exercise.id}
             onClick={() => setSelectedExercise(exercise)}
-            className="cursor-pointer"
+            className="cursor-pointer animate-slide-up"
+            style={{ animationDelay: `${Math.min(index * 0.02, 0.3)}s`, animationFillMode: 'both' }}
           >
             <ExerciseCard
               name={getExerciseName(exercise)}
               muscles={exercise.muscles}
               description={getExerciseDescription(exercise)}
+              equipment={exercise.equipment}
               onClick={() => setSelectedExercise(exercise)}
             />
           </div>

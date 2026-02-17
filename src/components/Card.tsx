@@ -1,13 +1,15 @@
 import { ReactNode } from 'react';
 
-interface CardProps {
+interface CardProps{
   children: ReactNode;
   className?: string;
+  hover?: boolean;
+  style?: React.CSSProperties;
 }
 
-export function Card({ children, className = '' }: CardProps) {
+export function Card({ children, className = '', hover = false, style }: CardProps) {
   return (
-    <div className={`bg-card rounded-xl shadow-sm border border-border/50 ${className}`}>
+    <div className={`bg-card rounded-xl shadow-sm border border-border/50 ${hover ? 'transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 cursor-pointer' : ''} ${className}`} style={style}>
       {children}
     </div>
   );

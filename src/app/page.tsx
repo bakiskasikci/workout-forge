@@ -54,10 +54,10 @@ export default function Home() {
     <div className="space-y-10">
       {/* Hero Section */}
       <div className="text-center py-8 sm:py-12">
-        <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
+        <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-4 animate-fade-in">
           {t('home.title')}
         </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-fade-in stagger-1">
           {t('home.subtitle')}
         </p>
       </div>
@@ -66,7 +66,7 @@ export default function Home() {
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {features.map((feature, index) => (
           <Link key={index} href={feature.href} className="block h-full">
-            <Card className="p-5 card-hover h-full flex flex-col">
+            <Card hover className="p-5 h-full flex flex-col animate-slide-up" style={{ animationDelay: `${index * 0.05 + 0.1}s`, animationFillMode: 'both' }}>
               <div className="flex items-center gap-3 mb-3">
                 <div className={`p-2.5 rounded-xl ${feature.iconBg}`}>
                   <feature.icon className={`w-5 h-5 ${feature.iconColor}`} />
@@ -80,7 +80,7 @@ export default function Home() {
       </div>
 
       {/* Getting Started */}
-      <Card className="p-6 sm:p-8">
+      <Card className="p-6 sm:p-8 animate-slide-up stagger-4">
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 bg-primary rounded-lg">
             <Target className="w-5 h-5 text-white" />
